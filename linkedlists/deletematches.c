@@ -163,7 +163,7 @@ node *delete_first_match(node *head, int delete_value, bool *was_deleted)
 
     while (current != NULL)
     {
-        if (current->value = delete_value)
+        if (current->value == delete_value)
         {
             prev->next = current->next;
             free(current);
@@ -175,6 +175,21 @@ node *delete_first_match(node *head, int delete_value, bool *was_deleted)
     }
     *was_deleted = false;
     return (head);
+}
+
+/*delete all nodes matching the value*/
+node *delete_all_matches(node *head, int delete_value, int *num_deleted)
+{
+    node *current = head;
+    bool deleted = false;
+    *num_deleted = 0;
+    do
+    {
+        current = delete_first_match(current, delete_value, &deleted);
+        if (deleted)
+            *num_deleted = *num_deleted + 1;
+    } while (deleted);
+    return (current);
 }
 
 int main(void)
@@ -197,21 +212,25 @@ int main(void)
 
     bool deleted;
 
+    printf("\n'delete_first_match'\n");
     list1_head = delete_first_match(list1_head, 3, &deleted);
-    if(deleted)
+    if (deleted)
         printf("(testing 3)\nA node with value 3 was deleted!\n");
     else
         printf("(testing 3)\nNo node was deleted!\n");
-
-    printf("List after deleting 3:\n");
     print_list(list1_head);
 
     list1_head = delete_first_match(list1_head, 99, &deleted);
-    if(deleted)
+    if (deleted)
         printf("(testing 99)\nA node with value 99 was deleted!\n");
     else
         printf("(testing 99)\nNo node was deleted!\n");
-    
-    printf("List after deleting 99:\n");
+    print_list(list1_head);
+
+    int num_deleted;
+
+    printf("\n'delete_all_matches'\n");
+    list1_head = delete_all_matches(list1_head, 10, &num_deleted);
+    printf("%d 10s deleted\n", num_deleted);
     print_list(list1_head);
 }
