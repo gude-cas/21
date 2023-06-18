@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 typedef struct node
 {
@@ -192,6 +193,39 @@ node *delete_all_matches(node *head, int delete_value, int *num_deleted)
     return (current);
 }
 
+/*efficiently delete all nodes matching the value*/
+node *efficient_delete_match(node *head, int delete_value, int *num_deleted)
+{
+    if (head == NULL)
+        return (NULL);
+    node *current, *tmp, *new_head;
+    current = head;
+    *num_deleted = 0;
+    while (current->value == delete_value)
+    {
+        tmp = current;
+        current = current->next;
+        free(tmp);
+        *num_deleted = *num_deleted + 1;
+        if (current == NULL)
+            return (NULL);
+    }
+    new_head = current;
+    while (current->next != NULL)
+    {
+        if (current->next->value == delete_value)
+        {
+            tmp = current->next;
+            current->next = current->next->next;
+            free(tmp);
+            *num_deleted = *num_deleted + 1;
+        }
+        else
+            current = current->next;
+    }
+    return (new_head);
+}
+
 int main(void)
 {
     node *list1_head = NULL;
@@ -233,4 +267,47 @@ int main(void)
     list1_head = delete_all_matches(list1_head, 10, &num_deleted);
     printf("%d 10s deleted\n", num_deleted);
     print_list(list1_head);
+
+    printf("\n******************\n");
+    node *list8 = NULL;
+    list8 = insert_at_head(list8, 4);
+    list8 = insert_at_head(list8, 3);
+    list8 = insert_at_head(list8, 4);
+    list8 = insert_at_head(list8, 5);
+    list8 = insert_at_head(list8, 4);
+    list8 = insert_at_head(list8, 4);
+    list8 = insert_at_head(list8, 7);
+    list8 = insert_at_head(list8, 4);
+    list8 = insert_at_head(list8, 4);
+    print_list(list8);
+    printf("\n'efficient_delete_match'\n");
+    int num_deleted2 = 0;
+    list8 = efficient_delete_match(list8, 4, &num_deleted2);
+    printf("%d 4s deleted\n", num_deleted2);
+    print_list(list8);
+
+    /*checking performance*/
+    node *list9 = NULL, *list10 = NULL;
+    int i = 0;
+    while (i < 100000)
+    {
+        list9 = insert_at_head(list9, i % 10);
+        i++;
+    }
+    while (i < 100000)
+    {
+        list10 = insert_at_head(list10, i % 10);
+        i++;
+    }
+    clock_t tic, toc;
+    tic = clock();
+    list9 = delete_all_matches(list9, 4, &num_deleted2);
+    toc = clock();
+    printf("\ndelete_all_matches: %fs\n", (double)(toc - tic) / CLOCKS_PER_SEC);
+    printf("elements deleted: %d\n", num_deleted2);
+    tic = clock();
+    list10 = efficient_delete_match(list10, 4, &num_deleted2);
+    toc = clock();
+    printf("efficient_delete_match: %fs\n", (double)(toc - tic) / CLOCKS_PER_SEC);
+    printf("elements deleted: %d\n", num_deleted2);
 }
