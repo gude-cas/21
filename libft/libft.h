@@ -6,7 +6,7 @@
 /*   By: gude-cas <gude-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 15:07:46 by gude-cas          #+#    #+#             */
-/*   Updated: 2023/06/16 15:46:19 by gude-cas         ###   ########.fr       */
+/*   Updated: 2023/06/28 20:00:54 by gude-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	**ft_split(const char *s, char c);
 char	*ft_strchr(char *str, int c);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen(char *str);
+int		ft_checkint(char *str);
 
 #endif
